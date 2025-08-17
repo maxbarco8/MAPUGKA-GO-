@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { Telegraf } = require('telegraf');
 const express = require('express');
+const serverless = require('serverless-http');
 const MapugkaCharacter = require('./character');
 
 // Ініціалізація бота та сервера
@@ -66,16 +67,8 @@ app.post(`/webhook`, (req, res) => {
   bot.handleUpdate(req.body, res);
 });
 
-// Обробник для Vercel
-module.exports = (req, res) => {
-  // Перевірка, чи це запит від Telegram вебхука
-  if (req.method === 'POST' && req.path === '/webhook') {
-    return app(req, res);
-  }
-  
-  // Обробка інших запитів
-  app(req, res);
-};
+// Експорт додатку для Vercel serverless середовища
+module.exports = serverless(app);
 
 // Обробка непередбачених помилок
 process.on('uncaughtException', (error) => {
