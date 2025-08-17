@@ -66,8 +66,16 @@ app.post(`/webhook`, (req, res) => {
   bot.handleUpdate(req.body, res);
 });
 
-// Експорт додатку для Vercel serverless середовища
-module.exports = app;
+// Обробник для Vercel
+module.exports = (req, res) => {
+  // Перевірка, чи це запит від Telegram вебхука
+  if (req.method === 'POST' && req.path === '/webhook') {
+    return app(req, res);
+  }
+  
+  // Обробка інших запитів
+  app(req, res);
+};
 
 // Обробка непередбачених помилок
 process.on('uncaughtException', (error) => {
