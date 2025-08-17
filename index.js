@@ -66,17 +66,8 @@ app.post(`/webhook`, (req, res) => {
   bot.handleUpdate(req.body, res);
 });
 
-// Запуск сервера
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Сервер запущено на порті ${PORT}`);
-  try {
-    bot.launch();
-    console.log('Telegram бот активовано');
-  } catch (error) {
-    console.error('Помилка активації бота:', error.message);
-  }
-});
+// Експорт додатку для Vercel serverless середовища
+module.exports = app;
 
 // Обробка непередбачених помилок
 process.on('uncaughtException', (error) => {
@@ -86,3 +77,17 @@ process.on('uncaughtException', (error) => {
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Необроблена відмова:', reason);
 });
+
+// Запуск сервера для локального розвитку
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Сервер запущено на порті ${PORT}`);
+    try {
+      bot.launch();
+      console.log('Telegram бот активовано');
+    } catch (error) {
+      console.error('Помилка активації бота:', error.message);
+    }
+  });
+}
