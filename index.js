@@ -55,6 +55,11 @@ bot.command('stake', (ctx) => {
   ctx.reply(`✅ Ви успішно застейкали ${amount} $MAPUGKA!\nЗагальний стейк: ${newBalance} $MAPUGKA`);
 });
 
+// Роут для кореневого шляху
+app.get('/', (req, res) => {
+  res.send('MAPUGKA Meme Factory & Charm Collection is running!');
+});
+
 // Налаштування вебхука
 app.use(express.json());
 app.post(`/webhook`, (req, res) => {
